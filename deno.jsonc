@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.174.0/"
+  },
+  "tasks": {
+    "clean": "rm -rf coverage/ profile/ profile.lcov",
+    "coverage": "deno coverage --lcov ./coverage --output=profile.lcov",
+    "coverage:html": "genhtml -o profile profile.lcov",
+    "test": "deno test --coverage=./coverage --parallel"
+  }
+}
