@@ -6,7 +6,7 @@
 
 import { OTPSecretKeyError } from "./error.ts";
 import { OTP } from "./otp.ts";
-import { assert, assertEquals, assertRejects } from "./test_deps.ts";
+import { assert, assertEquals, assertRejects } from "./deps.ts";
 
 Deno.test("withSecretKey", async (t) => {
   const shortSecretKey = "Hello World";

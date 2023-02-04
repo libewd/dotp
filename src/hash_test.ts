@@ -5,7 +5,7 @@
  */
 
 import { createHashToken } from "./hash.ts";
-import { assertEquals } from "./test_deps.ts";
+import { assertEquals } from "./deps.ts";
 import { createSecretKeyFromString } from "./secret_key.ts";
 import { createMovingFactorFromBigInt } from "./moving_factor.ts";
 import { decode } from "./encoding.ts";

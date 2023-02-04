@@ -43,11 +43,12 @@ export function createSecretKey(value: Uint8Array) {
 }
 
 /**
- * We use the WebCrypto API to "import" a key. This creates a `CryptoKey` that we can use with the rest of the API.
+ * We use the WebCrypto API to "import" a key.
+ * This creates a `CryptoKey` that we can use with the rest of the API.
  * @param value
  * @returns
  */
-export function importSecretKey(value: Uint8Array) {
+function importSecretKey(value: Uint8Array) {
   return crypto.subtle.importKey(
     "raw",
     value,
