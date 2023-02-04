@@ -5,7 +5,7 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/earthinc/dotp">
+  <a href="https://github.com/libewd/dotp">
     <img src="images/logo.png" alt="DOTP" height="128">
   </a>
   <h3 align="center">Deno One-Time Password</h3>
@@ -21,9 +21,10 @@ _Under construction. Please do not use._
 
 ## About The Project
 
-The purpose of DOTP is to provide a stable and well-tested OTP library for use
-with Deno. The implementation aims to follow the relevant RFC documents to the
-letter, and to provide a developer friendly API for the features listed below.
+The purpose of **dotp** is to provide a stable and well-tested OTP library for
+use with Deno. The implementation aims to follow the relevant RFC documents to
+the letter, and to provide a developer friendly API for the features listed
+below.
 
 - Create cryptographically random and secure OTP secrets
 - Create hash and time based OTP tokens.
@@ -32,18 +33,12 @@ letter, and to provide a developer friendly API for the features listed below.
 
 ## Getting Started
 
-You may use DOTP much like any other Deno module. Import the part of the module
-that you need and you are good to go.
+You may use this project much like any other Deno module. Import the part of the
+module that you need and you are good to go.
 
 ### Prerequisites
 
-- Deno **\***
-- `genhtml` (to generate coverage LCOV coverage report in HTML)
--
-  - This command is included in the `lcov` package in Ubuntu, install using
-    `sudo apt install lcov`.
-
-_Prerequisites marked with **\*** are required to use the module._
+- Deno
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
@@ -54,6 +49,10 @@ Use the command below in the root of the project to run the test suite.
 `deno task test`
 
 #### Generate Coverage Report
+
+_`genhtml` is required to generate coverage LCOV coverage report in HTML. This
+command is included in the `lcov` package in Ubuntu, install using
+`sudo apt install lcov`._
 
 To generate LCOV coverage profile, run the following command.
 
@@ -109,6 +108,8 @@ Christoffer Hallas
 
 ## References
 
+- [RFC 4226][hotp-rfc4226-url]
+- [RFC 6238][totp-rfc6238-url]
 - https://www.rfc-editor.org/rfc/rfc2104
 - https://www.rfc-editor.org/rfc/rfc3548
 - https://github.com/google/google-authenticator/wiki/Key-Uri-Format
