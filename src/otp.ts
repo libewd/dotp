@@ -16,8 +16,8 @@ import {
 } from "./secret_key.ts";
 
 export class OTP {
-  static async withSecretKey(secretKey: string, options?: Options) {
-    return new OTP(await createSecretKeyFromString(secretKey), options);
+  static async withSecretKeyString(value: string, options?: Options) {
+    return new OTP(await createSecretKeyFromString(value), options);
   }
 
   static async withRandomSecretKey(options?: Options) {

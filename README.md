@@ -40,8 +40,6 @@ module that you need and you are good to go.
 
 - Deno
 
-<p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
-
 ### Running Tests
 
 Use the command below in the root of the project to run the test suite.
@@ -70,17 +68,47 @@ generated an up to date LCOV profile.
 ### Generate Hash-based OTP
 
 ```ts
-import { createHashToken, createSecret } from "https://deno.land/x/dotp/mod.ts";
+import {
+  createHashToken,
+  createMovingFactorFromNumber,
+  createRandomSecretKey,
+} from "https://deno.land/x/dotp/mod.ts";
 
-const secret = createSecret();
-const token = createHashToken(secret, 1n);
+const secretKey = createRandomSecretKey();
+const token = createHashToken(secretKey, createMovingFactorFromNumber(1));
 ```
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
 ## API
 
-### [`createSecret(sizeInBytes = 20): Uint8Array`][api-create-secret-key]
+### [`class OTP(secretKey: CryptoKey, options?: Options)`][api-create-secret-key]
+
+#### [`OTP.withSecretKeyString(value: string, options?: Options): OTP`][api-create-secret-key]
+
+#### [`OTP.withRandomSecretKey(options?: Options): OTP`][api-create-secret-key]
+
+#### [`keyAsString(): Promise<string>`][api-create-secret-key]
+
+#### [`async hashToken(movingFactor: ArrayBuffer): Promise<Uint8Array>`][api-create-secret-key]
+
+#### [`async createTimeToken(offset = 0): Promise<Uint8Array>`][api-create-secret-key]
+
+#### [`async validateTimeToken(token: ArrayBuffer, skew = 2): Promise<boolean>`][api-create-secret-key]
+
+#### [`async hashToken(movingFactor: ArrayBuffer): Promise<Uint8Array>`][api-create-secret-key]
+
+### [`createMovingFactorFromNumber(value: number): ArrayBuffer`][api-create-secret-key]
+
+### [`createMovingFactorFromBigInt(): Uint8Array`][api-create-secret-key]
+
+### [`class OTPError(message?: string | undefined, options?: ErrorOptions | undefined): OTPError`][api-create-secret-key]
+
+### [`class OTPSecretKeyError(message?: string | undefined, options?: ErrorOptions | undefined): OTPError`][api-create-secret-key]
+
+### [`createDefaultOptions(timeStep: number): Options`][api-create-secret-key]
+
+### [`createOptions(timeStep = 30): Options`][api-create-secret-key]
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 

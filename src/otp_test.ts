@@ -16,7 +16,7 @@ Deno.test("withSecretKey", async (t) => {
     fn: async () => {
       await assertRejects(
         () => {
-          return OTP.withSecretKey(shortSecretKey);
+          return OTP.withSecretKeyString(shortSecretKey);
         },
         OTPSecretKeyError,
         "Secret key must be at least 20 bytes",
@@ -36,7 +36,7 @@ Deno.test("withSecretKey", async (t) => {
     await t.step({
       name: `secretKey: ${secretKey}`,
       fn: async () => {
-        await OTP.withSecretKey(secretKey);
+        await OTP.withSecretKeyString(secretKey);
       },
       sanitizeOps: false,
       sanitizeResources: false,
