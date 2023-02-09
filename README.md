@@ -12,14 +12,12 @@
   <p align="center">
 
 An implementation of HOTP ([RFC 4226][hotp-rfc4226-url]) and TOTP
-([RFC 6238][totp-rfc6238-url]) in Deno.
+([RFC 6238][totp-rfc6238-url]) in Deno. And a little bit extra.
 
 </p>
 </div>
 
-_Under construction. Please do not use._
-
-## About The Project
+## About
 
 The purpose of **dotp** is to provide a stable and well-tested OTP library for
 use with Deno. The implementation aims to follow the relevant RFC documents to
@@ -28,38 +26,6 @@ below.
 
 - Create cryptographically random and secure OTP secrets
 - Create hash and time based OTP tokens.
-
-<p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
-
-## Getting Started
-
-You may use this project much like any other Deno module. Import the part of the
-module that you need and you are good to go.
-
-### Prerequisites
-
-- Deno
-
-### Running Tests
-
-Use the command below in the root of the project to run the test suite.
-
-`deno task test`
-
-#### Generate Coverage Report
-
-_`genhtml` is required to generate coverage LCOV coverage report in HTML. This
-command is included in the `lcov` package in Ubuntu, install using
-`sudo apt install lcov`._
-
-To generate LCOV coverage profile, run the following command.
-
-`deno task coverage`
-
-Finally, to create a HTML coverage report, run this command after you've already
-generated an up to date LCOV profile.
-
-`deno task coverage:html`
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
@@ -80,35 +46,55 @@ const token = createHashToken(secretKey, createMovingFactorFromNumber(1));
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
-## API
+## Documentation
 
-#### [`class OTP(secretKey: CryptoKey, options?: Options)`][api-create-secret-key]
+For a quick idea on how the module works, see the [Usage][usage-url] section
+above.
 
-##### [`OTP.withSecretKeyString(value: string, options?: Options): OTP`][api-create-secret-key]
+### API
 
-##### [`OTP.withRandomSecretKey(options?: Options): OTP`][api-create-secret-key]
+Please visit our [Documentation][documentation-url] for details on the module
+API.
 
-##### [`keyAsString(): Promise<string>`][api-create-secret-key]
+### Examples
 
-##### [`async hashToken(movingFactor: ArrayBuffer): Promise<Uint8Array>`][api-create-secret-key]
+Go to our [examples][examples-url] directory to learn even more.
 
-##### [`async createTimeToken(offset = 0): Promise<Uint8Array>`][api-create-secret-key]
+<p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
-##### [`async validateTimeToken(token: ArrayBuffer, skew = 2): Promise<boolean>`][api-create-secret-key]
+## Things to Know
 
-##### [`async hashToken(movingFactor: ArrayBuffer): Promise<Uint8Array>`][api-create-secret-key]
+### HMAC-Based One-Time Password
 
-#### [`createMovingFactorFromNumber(value: number): ArrayBuffer`][api-create-secret-key]
+The basis for the HMAC-Based One-Time Password ("HOTP") algorithm is the key `K`
+and the moving factor `C`.
 
-#### [`createMovingFactorFromBigInt(): Uint8Array`][api-create-secret-key]
+We compute a HMAC (hash-based message authentication code, see
+[RFC 2104][rfc2104-url]) value from a secret key `K` and and a moving factor `C`
+using SHA-1 as the hash function. This gives us 20 bytes of data.
 
-#### [`class OTPError(message?: string | undefined, options?: ErrorOptions | undefined): OTPError`][api-create-secret-key]
+Then, we dynamically truncate the value. That is to say, we extract a number
+from the HMAC value, and then we use that value to truncate the HMAC value
+itself, which gives us the HOTP value.
 
-#### [`class OTPSecretKeyError(message?: string | undefined, options?: ErrorOptions | undefined): OTPError`][api-create-secret-key]
+And to put it simpler-ish. We use a large randomized number, we take a part of
+that number, a smaller number, and use that as the basis for slicing the big
+number into another number. Sometimes that final number has fewer digits than
+desired, so we pad it with zeros.
 
-#### [`createDefaultOptions(timeStep: number): Options`][api-create-secret-key]
+### Time-Based One-Time Password
 
-#### [`createOptions(timeStep = 30): Options`][api-create-secret-key]
+In order to compute a Time-Based One-Time-Password ("TOTP") we need to use HOTP
+and an agreed upon time period (technically referred to as the time step), in
+seconds, which is used to compute our moving factor `C` based on the number of
+times our time step has happened since the beginning of the UNIX epoch.
+
+This is how TOTP based tokens change over time, in many cases with a time step
+of 30 seconds.
+
+Want to see for your self? If you have an authenticator application, you can see
+the token expire and a new token be generated. See how once a token expires, you
+are either halfway through the current minute or just starting the next.
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
@@ -131,6 +117,7 @@ information.
 
 Christoffer Hallas
 <br> hallas@libewd.com
+<br> [@badgerhallas](https://twitter.com/badgerhallas)
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
@@ -138,18 +125,22 @@ Christoffer Hallas
 
 - [RFC 4226][hotp-rfc4226-url]
 - [RFC 6238][totp-rfc6238-url]
-- https://www.rfc-editor.org/rfc/rfc2104
-- https://www.rfc-editor.org/rfc/rfc3548
-- https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+- [RFC 2104][rfc2104-url]
+- [RFC 3548][rfc3548-url]
+- [Key URI Format][key-uri-format-url]
 
 <p align="right" style="font-size: 0.89em"><a href="#_dotp_top">back to top</a></p>
 
+[usage-url]: #usage
+[examples-url]: examples/
+[documentation-url]: https://deno.land/x/dotp@v0.0.1/mod.ts
 [discussions-url]: https://github.com/libewd/dotp/discussions/categories/ideas
-[conventionalcommits-url]: https://www.conventionalcommits.org/en/v1.0.0/
+[rfc2104-url]: https://www.rfc-editor.org/rfc/rfc2104
+[rfc3548-url]: https://www.rfc-editor.org/rfc/rfc3548
 [hotp-rfc4226-url]: https://www.rfc-editor.org/rfc/rfc4226.txt
 [totp-rfc6238-url]: https://www.rfc-editor.org/rfc/rfc6238.txt
+[key-uri-format-url]: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 [license-shield]: https://img.shields.io/github/license/libewd/dotp?style=for-the-badge
 [license-url]: https://github.com/libewd/dotp/blob/main/LICENSE.txt
 [version-shield]: https://img.shields.io/github/v/tag/libewd/dotp?style=for-the-badge
 [language-shield]: https://img.shields.io/github/languages/top/libewd/dotp?style=for-the-badge
-[api-create-secret-key]: hhttps://github.com/libewd/dotp/blob/main/key.ts#L7-L16
