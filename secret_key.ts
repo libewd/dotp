@@ -4,16 +4,11 @@ import { encode } from "./encoding.ts";
 import { OTPSecretKeyError } from "./error.ts";
 
 /**
- * secret_key.ts
- */
-
-/**
  * This function wraps the WebCrypto API to generate a key useful for signing HMAC SHA-1 mesages.
- * @returns
  */
 export function createRandomSecretKey() {
   return crypto.subtle.generateKey(
-    { name: "HMAC", hash: "sha-1" },
+    { name: "HMAC", hash: "SHA-1" },
     true,
     ["sign"],
   );
@@ -21,8 +16,6 @@ export function createRandomSecretKey() {
 
 /**
  * Encode a string `value` into an `Uint8Array`.
- *
- * @throws {OTPSecretKeyError} Secret key must be at least 20 bytes.
  */
 export function createSecretKeyFromString(value: string) {
   const secretKeyFromString = encode(value);
@@ -45,8 +38,6 @@ export function createSecretKey(value: Uint8Array) {
 /**
  * We use the WebCrypto API to "import" a key.
  * This creates a `CryptoKey` that we can use with the rest of the API.
- * @param value
- * @returns
  */
 function importSecretKey(value: Uint8Array) {
   return crypto.subtle.importKey(
@@ -62,9 +53,7 @@ function importSecretKey(value: Uint8Array) {
 
 /**
  * At times, we may have to show the actual secret key used to sign our authenticated message.
- * @param key
- * @returns
  */
-export function exportSecretKey(key: CryptoKey) {
-  return crypto.subtle.exportKey("raw", key);
+export async function exportSecretKey(key: CryptoKey) {
+  return new Uint8Array(await crypto.subtle.exportKey("raw", key));
 }

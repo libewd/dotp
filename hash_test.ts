@@ -1,9 +1,5 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
-/**
- * hotp_test.ts
- */
-
 import { createHashToken } from "./hash.ts";
 import { assertEquals } from "./deps.ts";
 import { createSecretKeyFromString } from "./secret_key.ts";

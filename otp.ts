@@ -24,6 +24,9 @@ export class OTP {
     return new OTP(await createRandomSecretKey(), options);
   }
 
+  /**
+   * The `timeStep` defaults to 30 seconds.
+   */
   private timeStep = 30;
 
   constructor(private secretKey: CryptoKey, options?: Options) {

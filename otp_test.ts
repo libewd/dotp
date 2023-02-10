@@ -1,9 +1,5 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
-/**
- * otp_test.ts
- */
-
 import { OTPSecretKeyError } from "./error.ts";
 import { OTP } from "./otp.ts";
 import { assert, assertEquals, assertRejects } from "./deps.ts";

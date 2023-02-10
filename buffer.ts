@@ -1,12 +1,3 @@
-// Copyright 2023 the libewd authors. All rights reserved. MIT license.
-
-/**
- * buffer.ts
- */
-
-/**
- * The `Buffer` class provides convinience for working with the `ArrayBuffer`.
- */
 export class Buffer {
   static withSize(size: number) {
     return new Buffer(new ArrayBuffer(size));

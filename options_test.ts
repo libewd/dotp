@@ -3,10 +3,6 @@
 import { assertEquals } from "./deps.ts";
 import { createDefaultOptions, createOptions } from "./options.ts";
 
-/**
- * options_test.ts
- */
-
 Deno.test("createOptions", () => {
   const defaultOptions = createOptions(15);
   assertEquals(defaultOptions.timeStep, 15);

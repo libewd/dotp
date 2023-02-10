@@ -4,12 +4,12 @@
  * mod.ts
  */
 
-export { OTP } from "./src/otp.ts";
-export { createRandomSecretKey } from "./src/secret_key.ts";
-export { createHashToken } from "./src/hash.ts";
+export { OTP } from "./otp.ts";
+export { createRandomSecretKey } from "./secret_key.ts";
+export { createHashToken } from "./hash.ts";
 export {
   createMovingFactorFromBigInt,
   createMovingFactorFromNumber,
-} from "./src/moving_factor.ts";
-export { OTPError, OTPSecretKeyError } from "./src/error.ts";
-export { createDefaultOptions, createOptions } from "./src/options.ts";
+} from "./moving_factor.ts";
+export { OTPError, OTPSecretKeyError } from "./error.ts";
+export { createDefaultOptions, createOptions } from "./options.ts";
