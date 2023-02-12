@@ -1,63 +1,31 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
 import { decode } from "./encoding.ts";
+import { timingSafeEqual } from "./deps.ts";
 
-export type KeyURIOptions = {
-  accountName?: string;
-  issuer?: string;
-  timeStep?: number;
-  hideDigits?: boolean;
-};
-
+/**
+ * The `Token` class represents a OTP token including some of the metadata about how the token was created. This is useful for informing consumers how to use the token itself.
+ */
 export default class Token {
   static fromUint8Array(
     value: Uint8Array,
-    type?: string,
-    algorithm?: string,
   ): Token {
-    return new Token(decode(value), type, algorithm);
+    return new Token(value);
   }
 
   constructor(
-    private token: string,
-    private type = "totp",
-    private algorithm = "SHA1",
+    public value: Uint8Array,
   ) {
   }
 
-  toString(): string {
-    return this.token;
+  compareWith(token: Token) {
+    return timingSafeEqual(this.value, token.value);
   }
 
-  toKeyURI(secretKey: string, keyURIOptions?: KeyURIOptions) {
-    const pathComponents: Array<string> = [];
-    const searchParams = new URLSearchParams({
-      secret: secretKey,
-      algorithm: this.algorithm,
-    });
-
-    if (keyURIOptions) {
-      const { accountName, issuer, timeStep, hideDigits = false } =
-        keyURIOptions;
-
-      if (issuer) {
-        searchParams.set("issuer", issuer);
-        pathComponents.push(issuer);
-      }
-
-      if (accountName) pathComponents.push(accountName);
-      if (timeStep) searchParams.set("period", timeStep.toString());
-      if (!hideDigits) {
-        searchParams.set("digits", this.toString().length.toString());
-      }
-    }
-
-    const path = pathComponents.join(":");
-    const url = new URL(
-      `/${path}?${searchParams.toString()}`,
-      `otpauth://${this.type}`,
-    );
-
-    return url.toString();
+  /**
+   * Get the token as a string.
+   */
+  toString(): string {
+    return decode(this.value);
   }
 }

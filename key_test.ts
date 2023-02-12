@@ -2,28 +2,27 @@
 
 import Key from "./key.ts";
 import { assertEquals, assertInstanceOf } from "./deps.ts";
-import { createRandomSecretKey } from "./secret_key.ts";
+import { createRandomCryptoKey } from "./crypto.ts";
 
-Deno.test("fromUint8Array", () => {
+Deno.test("fromUint8Array", async () => {
   const arrayBuffer = crypto.getRandomValues(new Uint8Array(20));
-  const key = Key.fromUint8Array(arrayBuffer);
-  console.log(key.toString());
+  const key = await Key.fromUint8Array(arrayBuffer);
 
   assertInstanceOf(key, Key);
 });
 
 Deno.test("fromCryptoKey", async () => {
-  const randomSecretKey = await createRandomSecretKey();
-  const key = await Key.fromCryptoKey(randomSecretKey);
+  const randomCryptoKey = await createRandomCryptoKey();
+  const key = await Key.fromCryptoKey(randomCryptoKey);
   assertInstanceOf(key, Key);
 });
 
-Deno.test("random", async () => {
-  const key = await Key.random();
+Deno.test("usingRandomCryptoKey", async () => {
+  const key = await Key.usingRandomCryptoKey();
   assertInstanceOf(key, Key);
 });
 
 Deno.test("toString", async () => {
-  const key = await Key.random();
-  assertEquals(key.toString().length, 104);
+  const key = await Key.usingRandomCryptoKey();
+  assertEquals((await key.toString()).length, 104);
 });

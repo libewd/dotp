@@ -1,13 +1,13 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
-import { createHashToken } from "./hash.ts";
+import { createHashBasedToken } from "./hash_based.ts";
 import { assertEquals } from "./deps.ts";
-import { createSecretKeyFromString } from "./secret_key.ts";
+import { createCryptoKeyFromString } from "./crypto.ts";
 import { createMovingFactorFromBigInt } from "./moving_factor.ts";
 import { decode } from "./encoding.ts";
 
 Deno.test("createHashToken", async (t) => {
-  const secretKey = await createSecretKeyFromString("12345678901234567890");
+  const secretKey = await createCryptoKeyFromString("12345678901234567890");
 
   const testCases: Array<[bigint, string]> = [
     [0n, "755224"],
@@ -27,7 +27,9 @@ Deno.test("createHashToken", async (t) => {
       name: `count: ${count}, token: ${expectedToken}`,
       fn: async () => {
         const movingFactor = createMovingFactorFromBigInt(count);
-        const token = decode(await createHashToken(secretKey, movingFactor));
+        const token = decode(
+          await createHashBasedToken(secretKey, movingFactor),
+        );
 
         assertEquals(
           token,

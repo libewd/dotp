@@ -1,27 +1,39 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
-/**
- * otp.ts
- */
-
-import { timingSafeEqual } from "./deps.ts";
-import { decode } from "./encoding.ts";
-import { createHashToken } from "./hash.ts";
+import { createHashBasedToken } from "./hash_based.ts";
 import { createMovingFactorFromNumber } from "./moving_factor.ts";
-import { createDefaultOptions, Options } from "./options.ts";
-import {
-  createRandomSecretKey,
-  createSecretKeyFromString,
-  exportSecretKey,
-} from "./secret_key.ts";
+import { KeyHashAlgorithm } from "./crypto.ts";
+import { createOneTimePasswordURI, URIOptions } from "./uri.ts";
+import Key from "./key.ts";
+import Token from "./token.ts";
+
+export type OTPType = "hotp" | "totp";
+
+export type OTPOptions = {
+  timeStep: number;
+};
 
 export class OTP {
-  static async withSecretKeyString(value: string, options?: Options) {
-    return new OTP(await createSecretKeyFromString(value), options);
+  static async withKey(
+    key: string,
+    type: OTPType = "totp",
+    algorithm: KeyHashAlgorithm = "SHA-1",
+    options?: OTPOptions,
+  ) {
+    return new OTP(
+      await Key.fromString(key),
+      type,
+      algorithm,
+      options,
+    );
   }
 
-  static async withRandomSecretKey(options?: Options) {
-    return new OTP(await createRandomSecretKey(), options);
+  static async withRandomSecretKey(
+    type: OTPType = "totp",
+    algorithm: KeyHashAlgorithm = "SHA-1",
+    options?: OTPOptions,
+  ) {
+    return new OTP(await Key.usingRandomCryptoKey(), type, algorithm, options);
   }
 
   /**
@@ -29,19 +41,24 @@ export class OTP {
    */
   private timeStep = 30;
 
-  constructor(private secretKey: CryptoKey, options?: Options) {
+  constructor(
+    private key: Key,
+    private type: OTPType = "totp",
+    private algorithm: KeyHashAlgorithm = "SHA-1",
+    options?: OTPOptions,
+  ) {
     if (!options) options = createDefaultOptions();
     this.timeStep = options.timeStep;
   }
 
-  get keyAsString() {
-    return exportSecretKey(this.secretKey).then((value) =>
-      decode(new Uint8Array(value))
-    );
+  keyToString(): Promise<string> {
+    return this.key.toString();
   }
 
   async hashToken(movingFactor: ArrayBuffer) {
-    return await createHashToken(this.secretKey, movingFactor);
+    return Token.fromUint8Array(
+      await createHashBasedToken(this.key.cryptoKey, movingFactor),
+    );
   }
 
   createTimeToken(offset = 0) {
@@ -50,7 +67,7 @@ export class OTP {
     );
   }
 
-  async validateTimeToken(token: ArrayBuffer, skew = 2) {
+  async validateTimeToken(token: Token, skew = 2) {
     return (await Promise.all(
       Array.from(Array(skew)).map((offset) => this.createTimeToken(offset)),
     )).reduce(
@@ -60,11 +77,33 @@ export class OTP {
     );
   }
 
-  private compareTokens(a: ArrayBuffer, b: ArrayBuffer) {
-    return timingSafeEqual(a, b);
+  private compareTokens(a: Token, b: Token) {
+    return a.compareWith(b);
   }
 
   private getElapsedTimeSteps() {
     return Date.now() / this.timeStep;
   }
+
+  /**
+   * Returns the token as a `otpauth` formatted Key URI.
+   */
+  async toURI(uriOptions: URIOptions): Promise<string> {
+    return createOneTimePasswordURI(
+      await this.keyToString(),
+      this.type,
+      this.algorithm,
+      uriOptions,
+    );
+  }
+}
+
+export function createOptions(timeStep: number): OTPOptions {
+  return {
+    timeStep,
+  };
+}
+
+export function createDefaultOptions(timeStep = 30): OTPOptions {
+  return createOptions(timeStep);
 }

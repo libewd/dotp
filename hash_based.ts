@@ -2,7 +2,7 @@
 
 import { encode } from "./encoding.ts";
 
-export async function createHashToken(
+export async function createHashBasedToken(
   key: CryptoKey,
   movingFactor: ArrayBuffer,
 ) {

@@ -1,4 +1,6 @@
-import { OTP } from "https://deno.land/x/dotp/mod.ts";
+import { OTP } from "../../mod.ts";
 
 const otp = await OTP.withRandomSecretKey();
-console.log(await otp.createTimeToken());
+const token = await otp.createTimeToken();
+
+console.log(await token.toString());

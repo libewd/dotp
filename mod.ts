@@ -5,11 +5,11 @@
  */
 
 export { OTP } from "./otp.ts";
-export { createRandomSecretKey } from "./secret_key.ts";
-export { createHashToken } from "./hash.ts";
+export { createRandomCryptoKey } from "./crypto.ts";
+export { createHashBasedToken } from "./hash_based.ts";
+export { createTimeBasedToken } from "./time_based.ts";
 export {
   createMovingFactorFromBigInt,
   createMovingFactorFromNumber,
 } from "./moving_factor.ts";
 export { OTPError, OTPSecretKeyError } from "./error.ts";
-export { createDefaultOptions, createOptions } from "./options.ts";
