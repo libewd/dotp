@@ -1,7 +1,5 @@
 #!/usr/bin/env -S deno run --allow-env
 
-import { parse } from "../src/deps.ts";
+import { parse } from "../deps.ts";
 
-const parsedArgs = parse(Deno.args);
-
-console.log(parsedArgs);
+const _ = parse(Deno.args);

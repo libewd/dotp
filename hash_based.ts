@@ -1,18 +1,8 @@
 // Copyright 2023 the libewd authors. All rights reserved. MIT license.
 
-/**
- * hash.ts
- */
-
 import { encode } from "./encoding.ts";
 
-/**
- * Create a token based on HOTP algorithm.
- * @param key
- * @param movingFactor
- * @returns
- */
-export async function createHashToken(
+export async function createHashBasedToken(
   key: CryptoKey,
   movingFactor: ArrayBuffer,
 ) {

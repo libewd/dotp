@@ -7,5 +7,14 @@
     "coverage": "deno coverage --lcov ./coverage --output=profile.lcov",
     "coverage:html": "genhtml -o profile profile.lcov",
     "test": "deno test --coverage=./coverage --parallel"
+  },
+  "fmt": {
+    "options": {
+      "useTabs": false,
+      "lineWidth": 80,
+      "indentWidth": 2,
+      "singleQuote": false,
+      "proseWrap": "always"
+    }
   }
 }
